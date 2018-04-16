@@ -1,0 +1,13 @@
+# ignore an entire directory
+/venv/
+
+# ignore a single file
+__pycache__
+
+# ignore a file type
+*.pyc
+*.db
+*.log
+*.swp
+*.swo
+*.pot
