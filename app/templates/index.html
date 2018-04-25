@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+{{ text[0] }} {{ text[1] }}
+<br>
+
+{% if verses %}
+{% for verse in verses %}
+    <span style="color:blue;">{{ loop.index }}</span>
+    {{ verse }}
+{% endfor %}
+{% endif %}
+
+{% if books %}
+{% for book in books %}
+    <span style="color:blue;">{{ loop.index }}</span>
+    <a href="{{ url_for('main.exploreBook', book=book) }}">{{ book }}</a>
+    <br>
+{% endfor %}
+{% endif %}
+
+{% if chapters %}
+{% for chapter in range(1,chapters+1) %}
+<a href="{{ url_for('main.exploreChapter', book=book, chapter=chapter) }}">{{ chapter }}</a>
+{% endfor %}
+{% endif %}
+
+{% if versions %}
+{% for key, value in versions.items() %}
+<a href="{{ url_for('main.changeVersion', version=key) }}">{{ key }}</a>
+<br>
+{% endfor %}
+{% endif %}
+{% endblock %}

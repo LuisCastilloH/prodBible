@@ -11,3 +11,5 @@ __pycache__
 *.swp
 *.swo
 *.pot
+*.env
+*.json
