@@ -1,4 +1,5 @@
 from datetime import datetime
+from copy import deepcopy
 
 from flask import g, current_app
 from flask import jsonify
@@ -14,6 +15,7 @@ from app.main import bp
 from config import versions
 
 text = Bible()
+parallelFlag = False
 
 @bp.before_app_request
 def before_request():
@@ -41,15 +43,30 @@ def explore():
     books = text.listOfBooks()
     return render_template('index.html', title=_('Home'), 
             text=None, verses=None, books=books)
-    # page = request.args.get('page', 1, type=int)
-    # posts = Post.query.order_by(Post.timestamp.desc()).paginate(
-        # page, current_app.config['POSTS_PER_PAGE'], False)
-    # next_url = url_for('main.explore', page=posts.next_num) \
-        # if posts.has_next else None
-    # prev_url = url_for('main.explore', page=posts.prev_num) \
-        # if posts.has_prev else None
-    # return render_template('index.html', title=_('Explore'), posts=posts.items,
-                        # next_url=next_url, prev_url=prev_url)
+
+@bp.route('/parallel')
+def parallel():
+    # display a parallel Bible version 
+    # input = <chosen version>
+    currentBook = text.getCurrentBook()
+    currentChapter = text.getCurrentChapter()
+    textVersion1 = text.displayText(currentBook, int(currentChapter))
+    verses = textVersion1[2]
+    global parallelFlag
+    if parallelFlag:
+        parallelFlag = False
+        return render_template('index.html', title=_('Home'), 
+                text=textVersion1, verses=verses)
+    else:
+        parallelFlag = True
+        secondText = deepcopy(text)
+        secondText.changeVersion('reinaValera')
+        textVersion2 = secondText.displayText(currentBook, int(currentChapter))
+        verses2 = textVersion2[2]
+        return render_template('index.html', title=_('Home'),text=textVersion1,
+            text2=textVersion2, verses=verses, verses2=verses2, 
+            parallel=parallelFlag)
+
 
 @bp.route('/explore/<book>')
 def exploreBook(book):
@@ -59,16 +76,30 @@ def exploreBook(book):
  
 @bp.route('/explore/<book>/<chapter>')
 def exploreChapter(book, chapter):
-    text2 = text.displayText(book, int(chapter))
-    verses = text2[2]
-    return render_template('index.html', title=_('Home'), 
-            text=text2, verses=verses)
+    textVersion1 = text.displayText(book, int(chapter))
+    verses = textVersion1[2]
+    global parallelFlag
+    if not parallelFlag:
+        return render_template('index.html', title=_('Home'), 
+                text=textVersion1, verses=verses)
+    else:
+        secondText = deepcopy(text)
+        secondText.changeVersion('reinaValera')
+        textVersion2 = secondText.displayText(book, int(chapter))
+        verses2 = textVersion2[2]
+        return render_template('index.html', title=_('Home'),text=textVersion1,
+            text2=textVersion2, verses=verses, verses2=verses2, 
+            parallel=parallelFlag)
 
 @bp.route('/version/<version>')
 def changeVersion(version):
+    currentBook = text.getCurrentBook()
+    currentChapter = text.getCurrentChapter()
     text.changeVersion(version)
-    text2 = text.displayText()
+    text2 = text.displayText(currentBook, int(currentChapter))
     verses = text2[2]
+    global parallelFlag
+    parallelFlag = False
     return render_template('index.html', title=_('Home'),
             text=text2, verses=verses)
 

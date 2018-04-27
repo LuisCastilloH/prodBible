@@ -51,6 +51,12 @@ class Bible(object):
         return (self.book, self.chapter,
                 self.text[self.book]['chapters'][self.chapter-1])
 
+    def getCurrentBook(self):
+        return self.book
+
+    def getCurrentChapter(self):
+        return self.chapter
+
     def listOfBooks(self):
         return self.bookNames
 

@@ -5,7 +5,20 @@
 {{ text[0] }} {{ text[1] }}
 <br>
 
-{% if verses %}
+{% if parallel %}
+{% for verse in verses %}
+    <span style="color:blue;">{{ loop.index }}</span>
+    {{ verse }}
+{% endfor %}
+<br>
+<br>
+{% for verse in verses2 %}
+    <span style="color:blue;">{{ loop.index }}</span>
+    {{ verse }}
+{% endfor %}
+{% endif %}
+
+{% if verses and not parallel %}
 {% for verse in verses %}
     <span style="color:blue;">{{ loop.index }}</span>
     {{ verse }}
