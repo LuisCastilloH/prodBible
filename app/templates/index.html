@@ -8,23 +8,32 @@
 {% if parallel %}
 {% for verse in verses %}
     <span style="color:blue;">{{ loop.index }}</span>
-    {{ verse }}
+    {% if userStatus %} <a href="#">{{ verse }}</a>
+    {% endif %}
+    {% if not userStatus %} {{ verse }}
+    {% endif %}
 {% endfor %}
 <br>
 <br>
 {% for verse in verses2 %}
     <span style="color:blue;">{{ loop.index }}</span>
-    {{ verse }}
+    {% if userStatus %} <a href="#">{{ verse }}</a>
+    {% endif %}
+    {% if not userStatus %} {{ verse }}
+    {% endif %}
 {% endfor %}
 {% endif %}
 
 {% if verses and not parallel %}
 {% for verse in verses %}
     <span style="color:blue;">{{ loop.index }}</span>
-    {{ verse }}
+    {% if userStatus %} <a href="#">{{ verse }}</a>
+    {% endif %}
+    {% if not userStatus %} {{ verse }}
+    {% endif %}
 {% endfor %}
 {% endif %}
-
+ 
 {% if books %}
 {% for book in books %}
     <span style="color:blue;">{{ loop.index }}</span>
