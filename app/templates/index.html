@@ -8,6 +8,7 @@
     <br>
     {{ userEmail }}
     <br>
+    <p>Last seen on: {{ moment(current_user.last_seen).format('LLL') }}</p>
 {% endif %}
 
 {% if lsBk %}

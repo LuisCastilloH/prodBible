@@ -93,6 +93,7 @@ class User(UserMixin, db.Model):
     bookmarks = db.relationship('Bookmark', backref='author', lazy='dynamic')
     lastBookViewed = db.Column(db.String(64))
     lastChapterViewed = db.Column(db.String(64))
+    last_seen = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
