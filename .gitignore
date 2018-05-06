@@ -12,4 +12,3 @@ __pycache__
 *.swo
 *.pot
 *.env
-*.json
