@@ -20,13 +20,12 @@ userLogged = 0
 
 @bp.before_app_request
 def before_request():
+    global userLogged
     if current_user.is_authenticated:
         current_user.last_seen = datetime.utcnow()
         db.session.commit()
-        global userLogged
         userLogged = 1
     else:
-        global userLogged
         userLogged = 0
     g.locale = str(get_locale())
 
