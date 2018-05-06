@@ -33,7 +33,6 @@ def index():
         userLogged = 1
     else:
         userLogged = 0
-    # import pdb; pdb.set_trace()
     text2 = text.displayText()
     verses = text2[2]
     return render_template('index.html', title=_('Home'), 
@@ -59,7 +58,7 @@ def parallel():
     currentChapter = text.getCurrentChapter()
     textVersion1 = text.displayText(currentBook, int(currentChapter))
     verses = textVersion1[2]
-    import pdb; pdb.set_trace()
+    # import pdb; pdb.set_trace()
     global parallelFlag
     if parallelFlag:
         parallelFlag = 0
@@ -111,72 +110,37 @@ def changeVersion(version):
     return render_template('index.html', title=_('Home'),
             text=text2, verses=verses, userStatus=userLogged)
 
+@bp.route('/bookmark/<bk>/<chp>/<vrs>')
+@login_required
+def bookmark(bk, chp, vrs):
+    currVersion = text.getCurrentVersion()
+    bookmark = Bookmark(book=bk, chapter=chp, verses=vrs, version=currVersion,
+                        author=current_user)
+    db.session.add(bookmark)
+    db.session.commit()
+    flash('Your bookmark is now saved!')
+    text2 = text.displayText(bk, int(chp), int(vrs))
+    verses2 = text2[2]
+    return render_template('index.html', title=_('Home'),text=text2,
+            verses=verses2, bookmark=1, vrs=int(vrs))
+
+@bp.route('/listBookmarks')
+@login_required
+def listBookmarks():
+    user = User.query.filter_by(username=current_user.username).first_or_404()
+    bookmarks = user.bookmarks.order_by(Bookmark.timestamp.desc())
+    listBk = list()
+    for bk in bookmarks:
+        listBk.append((text.displayText(bk.book, int(bk.chapter), 
+        int(bk.verses), version=bk.version), bk.version, int(bk.verses),
+        bk.timestamp))
+    return render_template('index.html', title=_('Home'), lsBk=listBk)
 
 @bp.route('/user/<username>')
 @login_required
 def user(username):
-    return 'user'
-    # user = User.query.filter_by(username=username).first_or_404()
-    # page = request.args.get('page', 1, type=int)
-    # posts = user.posts.order_by(Post.timestamp.desc()).paginate(
-        # page, current_app.config['POSTS_PER_PAGE'], False)
-    # next_url = url_for('main.user', username=user.username, 
-            # page=posts.next_num) if posts.has_next else None
-    # prev_url = url_for('main.user', username=user.username, 
-            # page=posts.prev_num) if posts.has_prev else None
-    # return render_template('user.html', user=user, posts=posts.items,
-            # next_url=next_url, prev_url=prev_url)
+    return render_template('index.html', title=_('Home'), 
+        userName=current_user.username, userEmail=current_user.email)
 
-# @bp.route('/edit_profile', methods=['GET', 'POST'])
-# @login_required
-# def edit_profile():
-    # form = EditProfileForm(current_user.username)
-    # if form.validate_on_submit():
-        # current_user.username = form.username.data
-        # current_user.about_me = form.about_me.data
-        # db.session.commit()
-        # flash(_('Your changes have been saved.'))
-        # return redirect(url_for('main.edit_profile'))
-    # elif request.method == 'GET':
-        # form.username.data = current_user.username
-        # form.about_me.data = current_user.about_me
-    # return render_template('edit_profile.html', title=_('Edit Profile'),
-                            # form=form)
 
-# @bp.route('/follow/<username>')
-# @login_required
-# def follow(username):
-    # user = User.query.filter_by(username=username).first()
-    # if user is None:
-        # flash(_('User %(username)s not found.', username=username))
-        # return redirect(url_for('main.index'))
-    # if user == current_user:
-        # flash(_('You cannot follow yourself!'))
-        # return redirect(url_for('main.user', username=username))
-    # current_user.follow(user)
-    # db.session.commit()
-    # flash('You are following {}!'.format(username))
-    # return redirect(url_for('main.user', username=username))
-
-# @bp.route('/unfollow/<username>')
-# @login_required
-# def unfollow(username):
-    # user = User.query.filter_by(username=username).first()
-    # if user is None:
-        # flash('User {} not found.'.format(username))
-        # return redirect(url_for('main.index'))
-    # if user == current_user:
-        # flash('You cannot unfollow yourself!')
-        # return redirect(url_for('main.user', username=username))
-    # current_user.unfollow(user)
-    # db.session.commit()
-    # flash('You are not following {}.'.format(username))
-    # return redirect(url_for('main.user', username=username))
-
-# @bp.route('/translate', methods=['POST'])
-# @login_required
-# def translate_text():
-    # return jsonify({'text': translate(request.form['text'],
-                                      # request.form['source_language'],
-                                      # request.form['dest_language'])})
 

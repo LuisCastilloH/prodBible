@@ -2,13 +2,35 @@
 {% import 'bootstrap/wtf.html' as wtf %}
 
 {% block app_content %}
+
+{% if userName %}
+    {{ userName }}
+    <br>
+    {{ userEmail }}
+    <br>
+{% endif %}
+
+{% if lsBk %}
+{% for bm in lsBk %}
+{{ bm[0][0] }} {{ bm[0][1] }}:{{ bm[2] }}, {{ bm[1] }} -- 
+{{ moment(bm[3]).fromNow() }}
+<br>
+{{ bm[0][2] }}
+<br>
+<br>
+{% endfor %}
+{% endif %}
+
+{% if text %}
 {{ text[0] }} {{ text[1] }}
+{% endif %}
 <br>
 
 {% if parallel %}
 {% for verse in verses %}
     <span style="color:blue;">{{ loop.index }}</span>
-    {% if userStatus %} <a href="#">{{ verse }}</a>
+    {% if userStatus %}
+<a href="{{ url_for('main.bookmark', bk=text[0], chp=text[1], vrs=loop.index) }}">{{ verse }}</a>
     {% endif %}
     {% if not userStatus %} {{ verse }}
     {% endif %}
@@ -17,23 +39,31 @@
 <br>
 {% for verse in verses2 %}
     <span style="color:blue;">{{ loop.index }}</span>
-    {% if userStatus %} <a href="#">{{ verse }}</a>
+    {% if userStatus %}
+<a href="{{ url_for('main.bookmark', bk=text[0], chp=text[1], vrs=loop.index) }}">{{ verse }}</a>
     {% endif %}
     {% if not userStatus %} {{ verse }}
     {% endif %}
 {% endfor %}
 {% endif %}
 
-{% if verses and not parallel %}
+{% if verses and not parallel and not bookmark %}
 {% for verse in verses %}
     <span style="color:blue;">{{ loop.index }}</span>
-    {% if userStatus %} <a href="#">{{ verse }}</a>
+    {% if userStatus %}
+<a href="{{ url_for('main.bookmark', bk=text[0], chp=text[1], vrs=loop.index) }}">{{ verse }}</a>
     {% endif %}
     {% if not userStatus %} {{ verse }}
     {% endif %}
 {% endfor %}
 {% endif %}
  
+{% if bookmark %}
+{{ vrs }}
+{{ verses }}
+<p>You saved this verse as a bookmark</p>
+{% endif %}
+
 {% if books %}
 {% for book in books %}
     <span style="color:blue;">{{ loop.index }}</span>

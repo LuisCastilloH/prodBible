@@ -41,21 +41,32 @@ class Bible(object):
         self.version = versions[version]
         self.text, self.bookNames = loadJSONBible(self.version)
 
-    def displayText(self, book='Genesis', chapter=1, verse=None):
+    def displayText(self, book='Genesis', chapter=1, verse=None, version=None):
         self.book = book
         self.chapter = chapter
+        if version:
+            text, bookNames = loadJSONBible(version)
+        else:
+            text = self.text
+            bookNames = self.bookNames
         if verse:
             self.verse = verse
             return (self.book, self.chapter,
-                self.text[self.book]['chapters'][self.chapter-1][self.verse-1])
+                text[self.book]['chapters'][self.chapter-1][self.verse-1])
         return (self.book, self.chapter,
-                self.text[self.book]['chapters'][self.chapter-1])
+                text[self.book]['chapters'][self.chapter-1])
 
     def getCurrentBook(self):
         return self.book
 
     def getCurrentChapter(self):
         return self.chapter
+
+    def getCurrentVerse(self):
+        return self.verse
+
+    def getCurrentVersion(self):
+        return self.version
 
     def listOfBooks(self):
         return self.bookNames

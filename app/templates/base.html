@@ -21,6 +21,9 @@
             <li><a href="{{ url_for('main.explore') }}">Explore</a></li>
             <li><a href="{{ url_for('main.version') }}">Version</a></li>
             <li><a href="{{ url_for('main.parallel') }}">Add parallel</a></li>
+            {% if not current_user.is_anonymous %}
+            <li><a href="{{ url_for('main.listBookmarks') }}">Bookmarks</a></li>
+            {% endif %}
         </ul>
         <ul class="nav navbar-nav navbar-right">
             {% if current_user.is_anonymous %}
@@ -41,3 +44,9 @@
         {% block app_content %}{% endblock %} 
     </div>
 {% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    {{ moment.include_moment() }}
+{% endblock %}
+
