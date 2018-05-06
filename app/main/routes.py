@@ -23,10 +23,10 @@ def before_request():
     if current_user.is_authenticated:
         current_user.last_seen = datetime.utcnow()
         db.session.commit()
-    else:
-        global parallelFlag
         global userLogged
-        parallelFlag = 0
+        userLogged = 1
+    else:
+        global userLogged
         userLogged = 0
     g.locale = str(get_locale())
 
