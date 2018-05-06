@@ -16,37 +16,28 @@ from config import versions
 
 text = Bible()
 parallelFlag = 0
-userLogged = 0
 
 @bp.before_app_request
 def before_request():
-    global userLogged
     if current_user.is_authenticated:
         current_user.last_seen = datetime.utcnow()
         db.session.commit()
-        userLogged = 1
-    else:
-        userLogged = 0
     g.locale = str(get_locale())
 
 @bp.route('/', methods=['GET', 'POST'])
 @bp.route('/index', methods=['GET', 'POST'])
 def index():
-    global userLogged
-    if current_user.is_authenticated:
-        userLogged = 1
-    else:
-        userLogged = 0
     text2 = text.displayText()
     verses = text2[2]
     return render_template('index.html', title=_('Home'), 
-            text=text2, verses=verses, userStatus=userLogged)
+            text=text2, verses=verses, userStatus=current_user.is_authenticated)
 
 @bp.route('/version')
 def version():
     versions2 = versions
     return render_template('index.html', title=_('Home'),
-            text=None, verses=None, versions=versions2, userStatus=userLogged)
+            text=None, verses=None, versions=versions2, 
+            userStatus=current_user.is_authenticated)
 
 @bp.route('/explore')
 def explore():
@@ -66,8 +57,8 @@ def parallel():
     global parallelFlag
     if parallelFlag:
         parallelFlag = 0
-        return render_template('index.html', title=_('Home'), 
-                text=textVersion1, verses=verses, userStatus=userLogged)
+        return render_template('index.html', title=_('Home'), text=textVersion1,
+                verses=verses, userStatus=current_user.is_authenticated)
     else:
         parallelFlag = 1
         secondText = deepcopy(text)
@@ -76,7 +67,7 @@ def parallel():
         verses2 = textVersion2[2]
         return render_template('index.html', title=_('Home'),text=textVersion1,
             text2=textVersion2, verses=verses, verses2=verses2, 
-            parallel=parallelFlag, userStatus=userLogged)
+            parallel=parallelFlag, userStatus=current_user.is_authenticated)
 
 
 @bp.route('/explore/<book>')
@@ -91,8 +82,8 @@ def exploreChapter(book, chapter):
     verses = textVersion1[2]
     global parallelFlag
     if not parallelFlag:
-        return render_template('index.html', title=_('Home'), 
-                text=textVersion1, verses=verses, userStatus=userLogged)
+        return render_template('index.html', title=_('Home'), text=textVersion1,
+                verses=verses, userStatus=current_user.is_authenticated)
     else:
         secondText = deepcopy(text)
         secondText.changeVersion('reinaValera')
@@ -100,7 +91,7 @@ def exploreChapter(book, chapter):
         verses2 = textVersion2[2]
         return render_template('index.html', title=_('Home'),text=textVersion1,
             text2=textVersion2, verses=verses, verses2=verses2, 
-            parallel=parallelFlag, userStatus=userLogged)
+            parallel=parallelFlag, userStatus=current_user.is_authenticated)
 
 @bp.route('/version/<version>')
 def changeVersion(version):
@@ -111,8 +102,8 @@ def changeVersion(version):
     verses = text2[2]
     global parallelFlag
     parallelFlag = 0
-    return render_template('index.html', title=_('Home'),
-            text=text2, verses=verses, userStatus=userLogged)
+    return render_template('index.html', title=_('Home'), text=text2, 
+            verses=verses, userStatus=current_user.is_authenticated)
 
 @bp.route('/bookmark/<bk>/<chp>/<vrs>')
 @login_required
