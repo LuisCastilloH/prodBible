@@ -1,5 +1,6 @@
 # ignore an entire directory
 /venv/
+/prodB/
 
 # ignore a single file
 __pycache__
