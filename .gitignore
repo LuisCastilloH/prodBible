@@ -1,5 +1,6 @@
 # ignore an entire directory
 /venv/
+/env/
 /prodB/
 
 # ignore a single file
