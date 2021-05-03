@@ -18,7 +18,7 @@ class Config(object):
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     ADMINS = ['luis.castillo.h@outlook.com']
-    POSTS_PER_PAGE = 25 
+    POSTS_PER_PAGE = 25
     LANGUAGES = ['en', 'es']
     MS_TRANSLATOR_KEY = os.environ.get('MS_TRANSLATOR_KEY')
     LOG_TO_STDOUT = os.environ.get('LOG_TO_STDOUT')
