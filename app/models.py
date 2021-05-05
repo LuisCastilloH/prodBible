@@ -1,27 +1,36 @@
-from datetime import datetime
-from hashlib import md5
-from json import loads
-from time import time
-from re import sub
-from os import path
+# @author Luis Castillo
 
-from werkzeug.security import generate_password_hash, check_password_hash
+'''
+Main class
+2018-2021
+'''
 
-from flask_login import UserMixin
-from flask import current_app
+from datetime   import datetime
+from json       import loads
+from time       import time
+from re         import sub
+from os.path    import abspath
+from jwt        import decode
+from jwt        import encode
 
-from app import db
-from app import login
+from werkzeug.security import generate_password_hash
+from werkzeug.security import check_password_hash
+
+from flask_login    import UserMixin
+from flask          import current_app
+
+from app    import db
+from app    import login
 from config import versions
 
 def loadJSONBible(version):
     temp = dict()
     bookNames = list()
-    filePath = path.abspath(''.join((version, '.json')))
+    filePath = abspath(''.join((version, '.json')))
     with open(filePath, 'rb') as f:
         data = f.read().decode('UTF-8')
     # cleaning of json string
-    data = sub('^[^\[]*', '', data)
+    data = sub('^[^\\[]*', '', data)
     jsonData = loads(data)
     for book in jsonData:
         temp[book['name']] = book
@@ -52,9 +61,9 @@ class Bible(object):
         if verse:
             self.verse = verse
             return (self.book, self.chapter,
-                text[self.book]['chapters'][self.chapter-1][self.verse-1])
+                text[self.book]['chapters'][self.chapter - 1][self.verse - 1])
         return (self.book, self.chapter,
-                text[self.book]['chapters'][self.chapter-1])
+                text[self.book]['chapters'][self.chapter - 1])
 
     def getCurrentBook(self):
         return self.book
@@ -84,7 +93,7 @@ class Bible(object):
     def displayVersesList(self):
         # possible function to show results of searchKeywords function
         pass
-        
+
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)
@@ -109,7 +118,7 @@ class User(UserMixin, db.Model):
         return bookmarks.order_by(Bookmark.timestamp.desc())
 
     def get_reset_password_token(self, expires_in=600):
-        return jwt.encode(
+        return encode(
             {'reset_password': self.id, 'exp': time() + expires_in },
             current_app.config['SECRET_KEY'],
             algorithm='HS256').decode('utf-8')
@@ -117,9 +126,9 @@ class User(UserMixin, db.Model):
     @staticmethod
     def verify_reset_password_token(token):
         try:
-            id = jwt.decode(token, current_app.config['SECRET_KEY'],
+            id = decode(token, current_app.config['SECRET_KEY'],
                     algorithms=['HS256'])['reset_password']
-        except:
+        except Exception:
             return
         return User.query.get(id)
 
