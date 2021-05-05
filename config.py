@@ -23,7 +23,7 @@ class Config(object):
     #     ('postgres://{}:{}@{}:{}/{}').format('postgres', 'barney', 'localhost',
     #     '5432', 'app')
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-        ('postgres://{}:{}@{}:{}/{}').format(USER, PASSWD, HOST, PORT, DATABASE)
+        ('postgresql://{}:{}@{}:{}/{}').format(USER, PASSWD, HOST, PORT, DATABASE)
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     MAIL_SERVER = os.environ.get('MAIL_SERVER')
     MAIL_PORT = int(os.environ.get('MAIL_PORT') or 25)
