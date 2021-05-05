@@ -1,5 +1,11 @@
 import os
 from dotenv import load_dotenv
+from credentials import HOST
+from credentials import DATABASE
+from credentials import USER
+from credentials import PORT
+from credentials import PASSWD
+
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 load_dotenv(os.path.join(basedir, '.env'))
@@ -9,8 +15,16 @@ versions = {'kings': 'kjv',
 
 class Config(object):
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'you-will-never-guess'
+    # SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
+        # 'sqlite:///' + os.path.join(basedir, 'app.db')
+    # SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
+        # ('postgres://{}.{}@{}/{}').format + os.path.join(basedir, 'app.db')
+    # SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
+    #     ('postgres://{}:{}@{}:{}/{}').format('postgres', 'barney', 'localhost',
+    #     '5432', 'app')
+    import pdb; pdb.set_trace()
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-            'sqlite:///' + os.path.join(basedir, 'app.db')
+        ('postgres://{}:{}@{}:{}/{}').format(USER, PASSWD, HOST, PORT, DATABASE)
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     MAIL_SERVER = os.environ.get('MAIL_SERVER')
     MAIL_PORT = int(os.environ.get('MAIL_PORT') or 25)
