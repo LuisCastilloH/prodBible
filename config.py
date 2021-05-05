@@ -1,29 +1,29 @@
+# @author Luis Castillo
+
+'''
+Configuration file for Flask application
+2018-2021
+'''
+
 import os
-from dotenv import load_dotenv
-from credentials import HOST
-from credentials import DATABASE
-from credentials import USER
-from credentials import PORT
-from credentials import PASSWD
+from os.path    import abspath
+from os.path    import join
+from dotenv     import load_dotenv
 
-
-basedir = os.path.abspath(os.path.dirname(__file__))
-load_dotenv(os.path.join(basedir, '.env'))
+basedir = abspath(os.path.dirname(__file__))
+load_dotenv(join(basedir, '.env'))
 
 versions = {'kings': 'kjv',
             'reinaValera': 'rvr'}
 
-class Config(object):
+class Config():
+    '''
+    Environment variables. Prepared for online hosting or dev hosting
+    '''
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'you-will-never-guess'
-    # SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-        # 'sqlite:///' + os.path.join(basedir, 'app.db')
-    # SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-        # ('postgres://{}.{}@{}/{}').format + os.path.join(basedir, 'app.db')
-    # SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-    #     ('postgres://{}:{}@{}:{}/{}').format('postgres', 'barney', 'localhost',
-    #     '5432', 'app')
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-        ('postgresql://{}:{}@{}:{}/{}').format(USER, PASSWD, HOST, PORT, DATABASE)
+        ('postgres://{}:{}@{}:{}/{}').format('postgres', 'barney', 'localhost',
+        '5432', 'app')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     MAIL_SERVER = os.environ.get('MAIL_SERVER')
     MAIL_PORT = int(os.environ.get('MAIL_PORT') or 25)

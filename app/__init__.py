@@ -1,20 +1,30 @@
-from flask import Flask
-from flask import request, current_app
+# @author Luis Castillo
 
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
-from flask_login import LoginManager
-from flask_mail import Mail
-from flask_bootstrap import Bootstrap
-from flask_moment import Moment
-from flask_babel import Babel
-from flask_babel import lazy_gettext as _l
+'''
+Creation of the app
+2018-2021
+'''
+
+from flask import Flask
+from flask import request
+from flask import current_app
+
+from flask_sqlalchemy   import SQLAlchemy
+from flask_migrate      import Migrate
+from flask_login        import LoginManager
+from flask_mail         import Mail
+from flask_bootstrap    import Bootstrap
+from flask_moment       import Moment
+from flask_babel        import Babel
+from flask_babel        import lazy_gettext as _l
 
 from config import Config
 import logging
 from logging.handlers import SMTPHandler
 from logging.handlers import RotatingFileHandler
-import os
+
+from os.path    import exists
+from os         import mkdir
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -69,10 +79,10 @@ def create_app(config_class=Config):
             stream_handler.setLevel(logging.INFO)
             app.logger.addHandler(stream_handler)
         else:
-            if not os.path.exists('logs'):
-                os.mkdir('logs')
-            file_handler = RotatingFileHandler('logs/appBible.log', 
-                                                maxBytes=10240, backupCount=10)
+            if not exists('logs'):
+                mkdir('logs')
+            file_handler = RotatingFileHandler('logs/appBible.log',
+                maxBytes=10240, backupCount=10)
             file_handler.setFormatter(logging.Formatter(
                 '%(asctime)s %(levelname)s: %(message)s '
                 '[in %(pathname)s:%(lineno)d'))
