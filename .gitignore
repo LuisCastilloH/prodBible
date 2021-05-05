@@ -5,7 +5,6 @@
 
 # ignore a single file
 __pycache__
-credentials*
 
 # ignore a file type
 *.pyc

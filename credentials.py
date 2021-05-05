@@ -1,0 +1,5 @@
+HOST = 'ec2-54-83-1-94.compute-1.amazonaws.com'
+DATABASE = 'd877hutl0hpq1h'
+USER = 'dsoiqovvjjggyz'
+PORT = '5432'
+PASSWD = '8ae4960593337bfa72549cafb5ae81abe41bf8698a9dbd0060950e2c4ba30c63'
