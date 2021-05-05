@@ -22,7 +22,6 @@ class Config(object):
     # SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
     #     ('postgres://{}:{}@{}:{}/{}').format('postgres', 'barney', 'localhost',
     #     '5432', 'app')
-    import pdb; pdb.set_trace()
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
         ('postgres://{}:{}@{}:{}/{}').format(USER, PASSWD, HOST, PORT, DATABASE)
     SQLALCHEMY_TRACK_MODIFICATIONS = False
